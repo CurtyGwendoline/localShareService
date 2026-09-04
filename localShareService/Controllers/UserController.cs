@@ -12,6 +12,27 @@ public class UserController : ControllerBase
         _context = context;
     }
 
+    // POST : api/User/sync
+    [HttpPost("sync")]
+    public async Task<ActionResult<User>> SyncUser([FromBody] User incomingUser)
+    {
+        var existingUser = await _context.Users
+            .FirstOrDefaultAsync(u => u.AzureId == incomingUser.AzureId);
+
+        if (existingUser != null)
+        {
+            existingUser.Email = incomingUser.Email;
+            existingUser.UserName = incomingUser.UserName;
+            await _context.SaveChangesAsync();
+            return Ok(existingUser);
+        }
+
+        _context.Users.Add(incomingUser);
+        await _context.SaveChangesAsync();
+
+        return CreatedAtAction("GetUser", new { userid = incomingUser.UserId }, incomingUser);
+    }
+
     // GET: api/User
     [HttpGet]
     public async Task<ActionResult<IEnumerable<User>>> GetUser()
