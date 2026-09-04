@@ -15,8 +15,16 @@
         public required string Description { get; set; }
         public required string Image { get; set; }
         public Type Type { get; set; }
-
-        // Navigation properties
-        public  User Owner { get; set; }
+        public int UserId { get; set; }
+        public User? Owner { get; set; } 
     }
 }
+
+//{
+//  "offerId": 0,
+//  "name": "Nom de l'offre",
+//  "description": "Description détaillée de l'offre",
+//  "image": "url_de_image",
+//  "type": 1,
+//  "userId": 1
+//}
