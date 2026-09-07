@@ -10,5 +10,6 @@
         public DateTime Date { get; set; }
         public DateTime CreationDate { get { return DateTime.Now; } }
         public int OfferId { get; set; }
+        public required string UserId { get; set; }
     }
 }
