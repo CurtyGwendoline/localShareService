@@ -1,8 +1,10 @@
-﻿namespace localShareService.Model
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace localShareService.Model
 {
     public class User
     {
-        public int UserId { get; set; }
+        [Key]
         public required string AzureId { get; set; }
         public required string UserName { get; set; }
         public required string Email { get; set; }
