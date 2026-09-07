@@ -7,6 +7,7 @@ using localShareService.Model;
 public class OfferController : ControllerBase
 {
     private readonly LocalShareCtx _context;
+
     public OfferController(LocalShareCtx context)
     {
         _context = context;
@@ -36,9 +37,8 @@ public class OfferController : ControllerBase
     }
 
     // PUT: api/Offer/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{offerid}")]
-    public async Task<IActionResult> PutOffer(int? offerid, Offer offer)
+    public async Task<IActionResult> PutOffer(int offerid, Offer offer)
     {
         if (offerid != offer.OfferId)
         {
@@ -67,19 +67,34 @@ public class OfferController : ControllerBase
     }
 
     // POST: api/Offer
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
     public async Task<ActionResult<Offer>> PostOffer(Offer offer)
     {
-        _context.Offers.Add(offer);
-        await _context.SaveChangesAsync();
+        if (offer == null)
+        {
+            return BadRequest("Offer data is missing.");
+        }
 
-        return CreatedAtAction("GetOffer", new { offerid = offer.OfferId }, offer);
+        // Force OfferId to 0 so SQL Server auto-generates the identity key instead of throwing a key conflict error
+        offer.OfferId = 0;
+
+        try
+        {
+            _context.Offers.Add(offer);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetOffer), new { offerid = offer.OfferId }, offer);
+        }
+        catch (DbUpdateException ex)
+        {
+            // This catches Foreign Key errors (e.g., UserId doesn't exist in SQL Users table)
+            return StatusCode(500, new { error = ex.InnerException?.Message ?? ex.Message });
+        }
     }
 
     // DELETE: api/Offer/5
     [HttpDelete("{offerid}")]
-    public async Task<IActionResult> DeleteOffer(int? offerid)
+    public async Task<IActionResult> DeleteOffer(int offerid)
     {
         var offer = await _context.Offers.FindAsync(offerid);
         if (offer == null)
@@ -93,7 +108,7 @@ public class OfferController : ControllerBase
         return NoContent();
     }
 
-    private bool OfferExists(int? offerid)
+    private bool OfferExists(int offerid)
     {
         return _context.Offers.Any(e => e.OfferId == offerid);
     }
