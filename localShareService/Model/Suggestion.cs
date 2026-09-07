@@ -1,4 +1,4 @@
-﻿namespace localShareService.Model
+namespace localShareService.Model
 {
     public class Suggestion
     {

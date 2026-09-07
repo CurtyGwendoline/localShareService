@@ -30,7 +30,7 @@ public class UserController : ControllerBase
         _context.Users.Add(incomingUser);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction("GetUser", new { userid = incomingUser.UserId }, incomingUser);
+        return CreatedAtAction(nameof(GetUser), new { azureId = incomingUser.AzureId }, incomingUser);
     }
 
     // GET: api/User
@@ -40,11 +40,11 @@ public class UserController : ControllerBase
         return await _context.Users.ToListAsync();
     }
 
-    // GET: api/User/5
-    [HttpGet("{userid}")]
-    public async Task<ActionResult<User>> GetUser(int userid)
+    // GET: api/User/{azureId}
+    [HttpGet("{azureId}")]
+    public async Task<ActionResult<User>> GetUser(string azureId)
     {
-        var user = await _context.Users.FindAsync(userid);
+        var user = await _context.Users.FindAsync(azureId);
 
         if (user == null)
         {
@@ -54,12 +54,11 @@ public class UserController : ControllerBase
         return user;
     }
 
-    // PUT: api/User/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPut("{userid}")]
-    public async Task<IActionResult> PutUser(int? userid, User user)
+    // PUT: api/User/{azureId}
+    [HttpPut("{azureId}")]
+    public async Task<IActionResult> PutUser(string azureId, User user)
     {
-        if (userid != user.UserId)
+        if (azureId != user.AzureId)
         {
             return BadRequest();
         }
@@ -72,7 +71,7 @@ public class UserController : ControllerBase
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!UserExists(userid))
+            if (!UserExists(azureId))
             {
                 return NotFound();
             }
@@ -86,21 +85,20 @@ public class UserController : ControllerBase
     }
 
     // POST: api/User
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
     public async Task<ActionResult<User>> PostUser(User user)
     {
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction("GetUser", new { userid = user.UserId }, user);
+        return CreatedAtAction(nameof(GetUser), new { azureId = user.AzureId }, user);
     }
 
-    // DELETE: api/User/5
-    [HttpDelete("{userid}")]
-    public async Task<IActionResult> DeleteUser(int? userid)
+    // DELETE: api/User/{azureId}
+    [HttpDelete("{azureId}")]
+    public async Task<IActionResult> DeleteUser(string azureId)
     {
-        var user = await _context.Users.FindAsync(userid);
+        var user = await _context.Users.FindAsync(azureId);
         if (user == null)
         {
             return NotFound();
@@ -112,8 +110,8 @@ public class UserController : ControllerBase
         return NoContent();
     }
 
-    private bool UserExists(int? userid)
+    private bool UserExists(string azureId)
     {
-        return _context.Users.Any(e => e.UserId == userid);
+        return _context.Users.Any(e => e.AzureId == azureId);
     }
 }
