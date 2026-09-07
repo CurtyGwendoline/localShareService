@@ -1,4 +1,4 @@
-﻿namespace localShareService.Model
+namespace localShareService.Model
 {
     public class Suggestion
     {
@@ -9,7 +9,6 @@
         public required string Room { get; set; }
         public DateTime Date { get; set; }
         public DateTime CreationDate { get { return DateTime.Now; } }
-
-
+        public int OfferId { get; set; }
     }
 }

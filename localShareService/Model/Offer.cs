@@ -1,4 +1,4 @@
-﻿namespace localShareService.Model
+namespace localShareService.Model
 {
     public enum Type
     {
@@ -14,6 +14,7 @@
         public required string Description { get; set; }
         public required string Image { get; set; }
         public Type Type { get; set; }
+        public ICollection<Suggestion> Suggestions { get; set; } = new List<Suggestion>();
 
         public required string AzureId { get; set; }
     }
