@@ -9,9 +9,6 @@
         public required string Room { get; set; }
         public DateTime Date { get; set; }
         public DateTime CreationDate { get { return DateTime.Now; } }
-
-        // Navigation properties
-        public required Offer Offer { get; set; }
-
+        public int OfferId { get; set; }
     }
 }

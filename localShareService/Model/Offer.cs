@@ -15,8 +15,8 @@
         public required string Description { get; set; }
         public required string Image { get; set; }
         public Type Type { get; set; }
+        public ICollection<Suggestion> Suggestions { get; set; } = new List<Suggestion>();
         public int UserId { get; set; }
-        public User? Owner { get; set; } 
     }
 }
 

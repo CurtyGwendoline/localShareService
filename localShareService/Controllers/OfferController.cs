@@ -14,16 +14,18 @@ public class OfferController : ControllerBase
 
     // GET: api/Offer
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Offer>>> GetOffer()
+    public async Task<ActionResult<IEnumerable<Offer>>> GetOffers()
     {
-        return await _context.Offers.ToListAsync();
+        return await _context.Offers.Include(o => o.Suggestions).ToListAsync();
     }
 
     // GET: api/Offer/5
     [HttpGet("{offerid}")]
     public async Task<ActionResult<Offer>> GetOffer(int offerid)
     {
-        var offer = await _context.Offers.FindAsync(offerid);
+        var offer = await _context.Offers
+            .Include(o => o.Suggestions)
+            .FirstOrDefaultAsync(o => o.OfferId == offerid);
 
         if (offer == null)
         {
